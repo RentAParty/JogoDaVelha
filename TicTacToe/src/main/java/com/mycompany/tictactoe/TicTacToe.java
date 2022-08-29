@@ -13,9 +13,9 @@ public class TicTacToe {
 	       int d2 = 0;
 	       int turno = 0; // retorna qual jogador ganhou
 	       do {
-	    	   d1 = (int) ((Math.random()*(6)+1)); // para pegar um número aleatório de 1 a 6.
-	    	   d2 = (int) ((Math.random()*(6)+1));
-	    	   Pontos(); // chamando a função de animação dos pontos
+	    	   d1 = (int) ((Math.random()*6+1)); // para pegar um número aleatório de 1 a 6.
+	    	   d2 = (int) ((Math.random()*6+1));
+	    	   Pontos(); // chamando a funcao de animacao dos pontos
 	    	   if (d1 == d2) {
 	    		   System.out.println("A rodada terminou empatada, ambos os dados deram "+d1);
 	    	   } else if (d1 > d2) {
@@ -79,12 +79,12 @@ public class TicTacToe {
     }
 
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in); //criação do scanner, usado para o usuário informar um valor
-        String[][] matriz = new String[3][3]; //criação da matriz usada para armazenar os valores do tic tac toe
-        String linhaHorizontal = "-------"; // criação do texto na horizontal, usado para facilitar a geração do tabuleiro
+        Scanner sc = new Scanner(System.in); //criacao do scanner, usado para o usuário informar um valor
+        String[][] matriz = new String[3][3]; //criacao da matriz usada para armazenar os valores do tic tac toe
+        String linhaHorizontal = "-------"; // criacao do texto na horizontal, usado para facilitar a geracao do tabuleiro
         LimparMatriz(matriz); //usado para resetar a matriz
         System.out.println(); //quebra de linha
-        boolean finalizar = false; //variável de finalização
+        boolean finalizar = false; //variavel de finalização
         
         String[] jogadores = new String[2];
 
@@ -94,11 +94,16 @@ public class TicTacToe {
             jogadores[i] = jogadores[i].toUpperCase(); // Matheus q pediu n sei pq 
         }
        
-        Dados(jogadores); // função para decidir quem começará primeiro
+        int turno = Dados(jogadores); // funcao para decidir quem começará primeiro
         
         while (!finalizar) {
             
-            
+            /* A partir daqui, tendo como o turno, o jogador que iniciara, 0 como jogador 1, 1 como jogador 2.
+             devera ser feito o inicio do jogo, jogador 1 como x, jogador 2 como bolinha, fixo ao jogador.
+             devera apresentar o tik tak toe, e criar os primeiros 4 inputs sem validacao.
+       
+              
+             */
             System.out.println("A pontuação está de " + "pontuação" + " para o(a) jogador(a) " + jogadores[0]);
             System.out.println("e " + "pontuação" + " para o(a) jogador(a) " + jogadores[1]);
             finalizar=Fim(sc);
