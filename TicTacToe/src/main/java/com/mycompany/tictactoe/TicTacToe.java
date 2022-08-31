@@ -20,8 +20,12 @@ public class TicTacToe {
 				System.out.println("A rodada terminou empatada, ambos os dados deram " + d1);
 			} else if (d1 > d2) {
 				System.out.println("O " + jogador[0][0] + " ganhou a rodada. " + d1 + " > " + d2);
+				jogador[0][1] = "X";
+				jogador[1][1] = "O";
 			} else {
 				System.out.println("O " + jogador[1][0] + " ganhou a rodada. " + d2 + " > " + d1);
+				jogador[0][1] = "O";
+				jogador[1][1] = "X";
 				turno = 1;
 			}
 		} while (d1 == d2); // looping para garantir que tenha um vencedor
@@ -115,10 +119,13 @@ public class TicTacToe {
 	public static void Jogadas(String[][] tabuleiro, String jogador[][], int turno) {
 		Scanner sc = new Scanner(System.in);
 		String jogada;
+		boolean condicao;
+		int letra = 0;
 		int valorAux = 0; // guardar o valor numerico de caracteres
 		int valorAux2 = 0; // guaradr o valor numerico de digitos
 		boolean verif = false; // verificacao condicao do caractere alfabetico
 		boolean verif2 = false; // verificacao condicao do digito
+		char[] aux = new char[2]; // guarda os dois caracteres da string de forma separada
 		do {
 			EscreverMatriz(tabuleiro); // para escrever a matriz
 			System.out.println("Onde deseja jogar?");
@@ -127,30 +134,142 @@ public class TicTacToe {
 				System.out.println("Por favor digite uma opção válida");
 			} else { // se for igual a dois caracteres vem nesse else
 				for (int i = 0; i < jogada.length(); i++) { // para navegar nos dois caracteres da string
-					char aux = jogada.charAt(i); // separa a string em um caractere cada
-					if ('a' <= aux && aux <= 'c') { // se for a, b ou c a condicao e verdadeira ocorre o if
-						valorAux = Character.getNumericValue(aux); // recebe um valor numerico correspondente a letra
-						if (valorAux >= 10 && valorAux <= 12) { // a = 10, b = 11, c = 12; por isso os intervalos
-							verif = true;
-						} 
+					aux[i] = jogada.charAt(i); // separa a string em um caractere cada
+				}
+				if (Character.isLetter(aux[0]) == true) { // se o primeiro caractere for uma letra cai aqui, se for
+															// digito cai no else
+					valorAux = Character.getNumericValue(aux[0]); // pego o codigo dela (A=10, B=11, C=12) indifere
+																	// maiusc ou minusc
+					if (valorAux < 13 && valorAux > 9) { // se for 10, 11 ou 12 verdadeiro, senao fica falso e tem de
+															// fazer de novo
+						verif = true;
 					}
-					if ('0' <= aux && aux <= '9') {  // se for 1, 2 ou 3 a condicao e verdadeira e ocorre o if
-						valorAux2 = Character.getNumericValue(aux); // recebe o valor do numero basciamente (1,2 ou 3)
-						if (valorAux2 >= 1 && valorAux2 <= 3) {
+					if (Character.isDigit(aux[1]) == true) { // aqui checa o segundo caractere, se for digito vai pra frente caso contrario fica falso direto
+						valorAux2 = Character.getNumericValue(aux[1]); // pega o valor do numero q no caso e ele mesmo
+						if (valorAux2 > 0 && valorAux2 < 4) { // se for 1,2 ou 3 e verdadeiro, caso contrario falso
 							verif2 = true;
-							break;
+						}
+					}
+				} else if (Character.isDigit(aux[0]) == true) { // a partir daqui e o mesmo processo que antes
+					valorAux2 = Character.getNumericValue(aux[0]); // porem com numero primeiro e letra depois
+					if (valorAux2 < 0 && valorAux2 < 4) {          // para caso o usaurio digitar 1a ao inves de a1 nao der invalido
+						verif2 = true;
+					}
+					if (Character.isLetter(aux[1]) == true) {
+						valorAux = Character.getNumericValue(aux[1]);
+						if (valorAux < 13 && valorAux > 9) {
+							verif = true;
 						}
 					}
 				}
-				if (verif == true) {
-					valorAux = valorAux - 10; // diminui em 10 para ficar na coluna certa
-					tabuleiro[valorAux2 -1][valorAux] = jogador[turno][1]; // aqui salvei o caractere na matriz do jogador
-				} else {
+				if (verif == true && verif2 == true) { // se as condicoes atenderem entra nesse if, se nao o usuario tem que por outro input
+					valorAux = valorAux - 10; // para poder entrar na coluna certa
+					condicao = EspacoVazio(tabuleiro, valorAux2, valorAux); // para checar se o espaco esta disponivel
+					if (condicao == true) { // se sim, entra aqui, se nao escreve que o espaco esta ocupado
+						tabuleiro[valorAux2 - 1][valorAux] = jogador[turno][1]; // aqui pega o simbolo do jogador e escreve no tabuleiro
+					} else {
+						System.out.println("Espaço já ocupado.");
+						verif = false;
+						verif2 = false; // nao sei se precisa desses false na verdade, mas to com medo de apagar KKKKKKKKKKKKK
+					}
+				} else { // se for dois num ou duas letras ou for uma letra ou num invalido, acontece esse sysout 
 					System.out.println("Opção inválida. Favor confira as regras novamente.");
 				}
 			}
 		} while (verif == false || verif2 == false);
+	}
 
+	public static boolean EspacoVazio(String[][] tabuleiro, int coluna, int linha) { //  para checar se ha espaco vazio
+		coluna--; // tem que tirar um da coluna para funcionar (1-3)-1 = (0-2) intervalo das
+					// matrizes
+		boolean espaco = false; // se espaco for falso, ent espaco ta ocupado
+		if (tabuleiro[coluna][linha].equals(" ")) { // se espaco estiver em branco, espaco = true
+			espaco = true;
+		}
+
+		return espaco;
+	}
+
+	public static String[] Ganhador(String[][] tabuleiro, String[][] jogador) { // sistema para verificar se houve um
+																				// ganahdor
+		String[] vencedor = new String[2]; // para armazenar se houve um ganhador (vencedor[0]) e quem ganhou
+											// (venceddor[1])
+		vencedor[0] = "false";
+		String aux1 = jogador[0][1]; // essas duas variaveis recebem o simbolo do jogador
+		String aux2 = jogador[1][1];
+		for (int i = 0; i < tabuleiro.length; i++) { // esse for confere se houve ganhador na linha
+			for (int j = 0; j < tabuleiro.length; j++) {
+				if (tabuleiro[i][j].equals(jogador[0][1])) { // aqui vai adicionando o simbolo do jogador ate o fim da
+																// linha
+					aux1 = aux1 + aux1;
+				} else if (tabuleiro[i][j].equals(jogador[1][1])) {
+					aux2 = aux2 + aux2;
+				}
+				if (aux1.length() == 4) { // se houve algum simbolo repetidos 4 vezes, houve um ganhador
+					vencedor[0] = "true"; // vencedor[0] recebe "true" e vencedor[1] "0" ou "1" dependendo do jogador
+					vencedor[1] = "0"; // foi o jeito mais otimizado que achei
+				} else if (aux2.length() == 4) {
+					vencedor[0] = "true";
+					vencedor[1] = "1";
+				}
+			}
+			aux1 = jogador[0][1];
+			aux2 = jogador[1][1];
+		}
+		for (int i = 0; i < tabuleiro.length; i++) { // mesma coisa do outro for, mas parta colunas
+			for (int j = 0; j < tabuleiro.length; j++) {
+				if (tabuleiro[j][i].equals(jogador[0][1])) {
+					aux1 = aux1 + aux1;
+				} else if (tabuleiro[j][i].equals(jogador[1][1])) {
+					aux2 = aux2 + aux2;
+				}
+				if (aux1.length() == 4) {
+					vencedor[0] = "true";
+					vencedor[1] = "0";
+				} else if (aux2.length() == 4) {
+					vencedor[0] = "true";
+					vencedor[1] = "1";
+				}
+			}
+			aux1 = jogador[0][1];
+			aux2 = jogador[1][1];
+		}
+		if (tabuleiro[0][0].equals(jogador[0][1]) && tabuleiro[1][1].equals(jogador[0][1]) // esses dois ifs sao para
+																							// checar as diagonais
+				&& tabuleiro[2][2].equals(jogador[0][1])
+				|| tabuleiro[0][2].equals(jogador[0][1]) && tabuleiro[1][1].equals(jogador[0][1])
+						&& tabuleiro[2][0].equals(jogador[0][1])) {
+			vencedor[0] = "true";
+			vencedor[1] = "0";
+		} else if (tabuleiro[0][0].equals(jogador[1][1]) && tabuleiro[1][1].equals(jogador[1][1])
+				&& tabuleiro[2][2].equals(jogador[1][1])
+				|| tabuleiro[0][2].equals(jogador[1][1]) && tabuleiro[1][1].equals(jogador[1][1])
+						&& tabuleiro[2][0].equals(jogador[1][1])) {
+			vencedor[0] = "true";
+			vencedor[1] = "1";
+		}
+		return vencedor;
+	}
+
+	public static int[] Contador(String[] jogador, int[] contador, String[][] jogadores) { // para ccontar a quantidade
+																							// de pontos de cada jogador
+		if (jogador[1].equals("0")) { // se tiver 0 quem ganhou foi o jogador que colocou o nome primeiro
+			contador[0]++;
+			System.out.println("O jogador 1 venceu essa!");
+		} else if (jogador[1].equals("1")) { // se tiver 1 quem ganhou foi o jogador que colocou o nome depois
+			contador[1]++;
+			System.out.println("O jogador 2 venceu essa!");
+		}
+		System.out.println("Placar geral: ");
+		System.out.println(jogadores[0][0] + " " + contador[0] + " pontos");
+		System.out.println(jogadores[1][0] + " " + contador[1] + " pontos");
+		return contador;
+	}
+
+	public static void LimpaTela() { // pula 50 linhas e "limpatela"
+		for (int i = 0; i < 50; i++) {
+			System.out.println();
+		}
 	}
 
 	public static void main(String[] args) {
@@ -161,9 +280,10 @@ public class TicTacToe {
 		LimparMatriz(matriz); // usado para resetar a matriz
 		System.out.println(); // quebra de linha
 		boolean finalizar = false; // variavel de finalização
-
+		boolean ganhador = false; // para saber se houve ou nao um ganhador
+		String[] teste = new String[2]; // variavel necessaria para o placar e finalizar o jogo da velha
 		String[][] jogadores = new String[2][2]; // transformei em matriz para guardar qual simnbolo e tbm
-
+		int[] placar = new int[2];
 		for (int i = 0; i < 2; i++) {
 			System.out.println("Informe o nome do " + (i + 1) + "º jogador(a):");
 			jogadores[i][0] = sc.nextLine(); // para evitar um erro que estava dando caso a pessoa colocasse o nome
@@ -172,33 +292,38 @@ public class TicTacToe {
 		}
 
 		int turno = Dados(jogadores); // funcao para decidir quem começará primeiro
-		if (turno == 0) {
-			jogadores[0][1] = "X";
-			jogadores[1][1] = "O";
-		} else if (turno == 1) {
-			jogadores[0][1] = "O";
-			jogadores[1][1] = "X";
-		}
+		int n = 0;
+		do { // adicionei esse do para que funcionesse da maneira apropriada o menu de sair
+			while (ganhador == false) {
+				Jogadas(matriz, jogadores, turno); // chama função jogadas para fazer a jogada
+				if (n >= 4) {
+					teste = Ganhador(matriz, jogadores); // a partir da 5 jogada, o sistema chama essa função de
+															// verificar se teve um ganhador
+					if (teste[0].equals("true")) { // se tiver um ganhador cai nesse if e o while para
+						Pontos();
+						EscreverMatriz(matriz);
+						placar = Contador(teste, placar, jogadores); // chama a funcao responsavel pelo placar
+						ganhador = true;
+					}
+				}
+				turno = Turno(turno); // para ir alternando o turno
+				n++;
+			}
 
-		while (!finalizar) {
-			/*
-			 * A partir daqui, tendo como o turno, o jogador que iniciara, 0 como jogador 1,
-			 * 1 como jogador 2. devera ser feito o inicio do jogo, jogador 1 como x,
-			 * jogador 2 como bolinha, fixo ao jogador. devera apresentar o tik tak toe, e
-			 * criar os primeiros 4 inputs sem validacao.
-			 * 
-			 * 
-			 */
-			Jogadas(matriz, jogadores, turno);
-			EscreverMatriz(matriz);
-			turno = Turno(turno);
-
-			System.out.println("A pontuação está de " + "pontuação" + " para o(a) jogador(a) " + jogadores[0][0]);
-			System.out.println("e " + "pontuação" + " para o(a) jogador(a) " + jogadores[1][0]);
+			Pontos();
+			LimpaTela(); // criei uma funcao para "limpatela" mas e uma gambiarra na verdade
 			finalizar = Fim(sc);
-		}
-
-		System.out.println();
+			if (finalizar == false) {
+				ganhador = false;
+				LimparMatriz(matriz);
+			}
+		} while (finalizar == false); // aqui é caso o usuario deseja sair
 		sc.close(); // fechar o scanner, usado para não ter um uso de dados desnecessário.
+
 	}
 }
+	/* falta achar os erros (com certeza tem, mas n achei) 
+       e tambem verificar caso de empate, eu esqueci de fazer mas to de saco cheio de codar ja kkkkk
+       se faltar mais alguma coisa, perdao e me avisa, pra eu saber q tenho q olhar as alteracoes
+
+	*/
