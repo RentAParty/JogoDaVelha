@@ -457,5 +457,57 @@ public class TicTacToe {
 		} while (finalizarCodigo == false);
 		sc.close();
 
-	}
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in); // criacao do scanner, usado para o usuário informar um valor
+
+        String[][] matriz = new String[3][3];
+        // criacao do texto na horizontal, usado para facilitar a geracao do
+        // criacao da matriz usada para armazenar os valores do tic tac toe
+        LimparMatriz(matriz); // usado para resetar a matriz
+        System.out.println(); // quebra de linha
+        boolean finalizar = false; // variavel de finalização
+        boolean ganhador = false; // para saber se houve ou nao um ganhador
+        int[] numeroPlacar = new int[2]; // variavel necessaria para o placar e finalizar o jogo da velha
+        String[][] jogadores = new String[2][2]; // transformei em matriz para guardar qual simnbolo e tbm
+        int[] placar = new int[2];
+        linha();
+        for (int i = 0; i < 2; i++) {
+            System.out.println("| INFORME O NOME DO " + (i + 1) + "º JOGADOR(A):");
+            jogadores[i][0] = sc.nextLine();
+            jogadores[i][0] = jogadores[i][0].toUpperCase();
+        }
+
+        int turno = Dados(jogadores); // funcao para decidir quem começará primeiro
+        do { // adicionei esse do para que funcionesse da maneira apropriada o menu de sair
+            int n = 0;
+            while (!ganhador) {
+                n++;
+                Jogadas(matriz, jogadores, turno); // chama função jogadas para fazer a jogada
+                if (n >= 4) {
+                    numeroPlacar = Ganhador(matriz, jogadores, n); // a partir da 5 jogada, o sistema chama essa função de
+                    // verificar se teve um ganhador
+                    if (numeroPlacar[0] == 1) { // se tiver um ganhador cai nesse if e o while para
+
+                        EscreverMatriz(matriz);
+                        placar = Contador(numeroPlacar, placar, jogadores); // chama a funcao responsavel pelo placar
+                        ganhador = true;
+                    } else if (n == 9) {
+                        placar = Contador(numeroPlacar, placar, jogadores);
+                        turno = Turno(turno);
+                        break;
+                    }
+                }
+                turno = Turno(turno); // para ir alternando o turno
+            }
+
+            finalizar = Fim(sc);
+            if (!finalizar) {
+                ganhador = false;
+                LimparMatriz(matriz);
+            }
+            // criei uma funcao para "limpatela" mas e uma gambiarra na verdade
+        } while (!finalizar); // aqui é caso o usuario deseja sair
+        sc.close(); // fechar o scanner, usado para não ter um uso de dados desnecessário.
+    }
 }
