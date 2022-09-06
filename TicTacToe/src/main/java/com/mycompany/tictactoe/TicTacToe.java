@@ -3,83 +3,16 @@ package com.mycompany.tictactoe;
 import java.util.Scanner;
 
 public class TicTacToe {
-	/* Funcao feita para decidir quem começara a rodada */
-	public static int Dados(String param_jogadorAndSimbolo[][]) {
-		System.out.println("Será decidido quem jogará primeiro através de um sistema de dados.");
-		System.out.println("O computador lançara um dado com número aleatório de 1 a 6 para cada um dos jogadores.");
-		System.out.println("O jogador cujo dado tiver tido o maior número começará a rodada.");
-		System.out.println("Em caso de empate os dados serão lançados novamente");
-		int dadoPrimeiroJogador = 0;
-		int dadoSegundoJogador = 0;
-		int turnoJogador = 0;
-		do {
-			dadoPrimeiroJogador = (int) ((Math.random() * 6 + 1));
-			dadoSegundoJogador = (int) ((Math.random() * 6 + 1));
-			AnimacaoPontos();
-			if (dadoPrimeiroJogador == dadoSegundoJogador) {
-				System.out.println("A rodada terminou empatada, ambos os dados deram " + dadoPrimeiroJogador);
-			} else if (dadoPrimeiroJogador > dadoSegundoJogador) {
-				System.out.println("O " + param_jogadorAndSimbolo[0][0] + " ganhou a rodada. " + dadoPrimeiroJogador
-						+ " > " + dadoSegundoJogador);
-				param_jogadorAndSimbolo[0][1] = "X";
-				param_jogadorAndSimbolo[1][1] = "O";
-			} else {
-				System.out.println("O " + param_jogadorAndSimbolo[1][0] + " ganhou a rodada. " + dadoSegundoJogador
-						+ " > " + dadoPrimeiroJogador);
-				param_jogadorAndSimbolo[0][1] = "O";
-				param_jogadorAndSimbolo[1][1] = "X";
-				turnoJogador = 1;
-			}
-		} while (dadoPrimeiroJogador == dadoSegundoJogador);
-		return turnoJogador;
-	}
 
-	/* Funcao para ir alternando os turnos */
-	public static int AlternarTurnos(int param_turnoAtual) {
-		int proxTurno = 0;
-		if (param_turnoAtual == 0) {
-			proxTurno = 1;
+	/* Funcao para limpartela */
+	public static void LimpaTela() {
+		for (int i = 0; i < 50; i++) {
+			System.out.println();
 		}
-		return proxTurno;
 	}
 
-	/*
-	 * Funcao animacao pontos, usada para dar tempo do usuario ler todas as
-	 * informaçoesw
-	 */
-	public static void AnimacaoPontos() {
-		for (int i = 0; i < 3; i++) {
-			Delay(500);
-			System.out.print(".");
-		}
-		System.out.println();
-
-	}
-
-	/* Funcao usada para saber se o usuario quis finalizar */
-	public static boolean Fim(Scanner sc) {
-		String sair;
-		boolean opcao = false;
-		do {
-			System.out.println("Deseja finalizar? S/N");
-			sair = sc.next();
-			sair = sair.toUpperCase();
-			switch (sair) {
-			case "S" -> {
-				opcao = true;
-				sair = "0";
-			}
-			case "N" -> {
-				opcao = false;
-				sair = "0";
-			}
-			default -> {
-				System.out.println("Opção inválida!");
-				sair = "1";
-			}
-			}
-		} while (!sair.equals("0"));
-		return opcao;
+	public static void LinhaParaSepararInformacoes() {
+		System.out.println(" ---------------------------------------------------------------------------------------");
 	}
 
 	/* Funcao de atraso para usar na animacao */
@@ -103,7 +36,6 @@ public class TicTacToe {
 	/* Funcao usada para escrever a matriz */
 	public static void EscreverMatriz(String param_tabuleiro[][]) {
 		System.out.println();
-		AnimacaoPontos();
 		System.out.println();
 		System.out.println("    A    B    C");
 		for (int i = 0; i < param_tabuleiro.length; i++) {
@@ -121,8 +53,55 @@ public class TicTacToe {
 			}
 		}
 		System.out.println();
-		AnimacaoPontos();
-		System.out.println();
+	}
+
+	/* Funcao feita para decidir quem começara a rodada */
+	public static int DadosPrimeiraRodada(String param_jogadorAndSimbolo[][]) {
+		LinhaParaSepararInformacoes();
+		System.out.println("| Será decidido quem jogará primeiro através de um sistema de dados.                    |");
+		Delay(1000);
+		System.out.println("| O computador lançara um dado com número aleatório de 1 a 6 para cada um dos jogadores.|");
+		Delay(1000);
+		System.out.println("| O jogador cujo dado tiver tido o maior número começará a rodada.                      |");
+		Delay(1000);
+		System.out.println("| Em caso de empate os dados serão lançados novamente                                   |");
+		int[] dadosJogadores = new int[2];
+		int turnoJogador = 0;
+		do {
+			dadosJogadores[0] = (int) ((Math.random() * 6 + 1));
+			dadosJogadores[1] = (int) ((Math.random() * 6 + 1));
+			Delay(1000);
+			System.out.println(
+					"|                                     Dados rolados!                                    |");
+			Delay(500);
+			if (dadosJogadores[0] == dadosJogadores[1]) {
+				System.out.println("| A rodada terminou empatada, ambos os dados deram " + dadosJogadores[0]
+						+ "                                    |");
+			} else if (dadosJogadores[0] > dadosJogadores[1]) {
+				System.out.println("| O " + param_jogadorAndSimbolo[0][0] + " ganhou a rodada. " + dadosJogadores[0]
+						+ " > " + dadosJogadores[1] + "                                                          |");
+				param_jogadorAndSimbolo[0][1] = "X";
+				param_jogadorAndSimbolo[1][1] = "O";
+			} else {
+				System.out.println("| O " + param_jogadorAndSimbolo[1][0] + " ganhou a rodada. " + dadosJogadores[1]
+						+ " > " + dadosJogadores[0] + "                                                          |");
+				param_jogadorAndSimbolo[0][1] = "O";
+				param_jogadorAndSimbolo[1][1] = "X";
+				turnoJogador = 1;
+			}
+		} while (dadosJogadores[0] == dadosJogadores[1]);
+		LinhaParaSepararInformacoes();
+		Delay(1500);
+		return turnoJogador;
+	}
+
+	/* Funcao para ir alternando os turnos */
+	public static int AlternarTurnos(int param_turnoAtual) {
+		int proxTurno = 0;
+		if (param_turnoAtual == 0) {
+			proxTurno = 1;
+		}
+		return proxTurno;
 	}
 
 	/*
@@ -267,6 +246,17 @@ public class TicTacToe {
 		return espaco;
 	}
 
+	/* Funcao para fazer a jogada */
+	public static String[][] EfetuarJogada(String param_jogada, String[][] param_tabuleiro, int param_turno,
+			String[][] param_jogadorAndSimbolo) {
+		char[] caractereDaJogada = new char[2];
+		int[] coordenadaDaJogada = new int[2];
+		caractereDaJogada = SepararCaractereJogada(param_jogada);
+		coordenadaDaJogada = CoordenadaDaJogada(caractereDaJogada);
+		param_tabuleiro[coordenadaDaJogada[0]][coordenadaDaJogada[1]] = param_jogadorAndSimbolo[param_turno][1];
+		return param_tabuleiro;
+	}
+
 	/* Funcao para verificar se houve um vencedor */
 	public static boolean HouveUmVencedor(String[][] param_tabuleiro, String[][] param_JogadorAndSimbolo, int n) {
 		boolean houveUmVencedor = false;
@@ -289,53 +279,7 @@ public class TicTacToe {
 		return houveUmVencedor;
 	}
 
-	/* Funcao para verificar se houve vencedor na diagonal */
-	public static boolean Diagonal(String[][] param_tabuleiro, String[][] param_JogadorAndSimbolo) {
-		boolean vencedorDiagonal = false;
-		if (!param_tabuleiro[0][0].equals(" ") && !param_tabuleiro[2][2].equals(" ")
-				&& param_tabuleiro[0][0].equals(param_tabuleiro[2][2])) {
-			if (param_tabuleiro[0][0].equals(param_tabuleiro[1][1])) {
-				vencedorDiagonal = true;
-			} 
-		} 
-		if (!param_tabuleiro[2][0].equals(" ") && !param_tabuleiro[0][2].equals(" ")
-				&& param_tabuleiro[2][0].equals(param_tabuleiro[0][2])) {
-			if (param_tabuleiro[2][0].equals(param_tabuleiro[1][1])) {
-				vencedorDiagonal = true;
-			}
-		}
-		return vencedorDiagonal;
-	}
-
-	/* Funcao para verificar se houve vencedor na linha */
-	public static boolean Linha(String[][] param_tabuleiro, String[][] param_JogadorAndSimbolo) {
-		boolean vencedorLinha = false;
-		String simboloJogador1 = param_JogadorAndSimbolo[0][1];
-		String simboloJogador2 = param_JogadorAndSimbolo[1][1];
-		for (int i = 0; i < param_tabuleiro.length; i++) {
-			for (int j = 0; j < param_tabuleiro[i].length; j++) {
-				if (param_tabuleiro[i][j].equals(param_JogadorAndSimbolo[0][1])) {
-					simboloJogador1 = simboloJogador1 + param_JogadorAndSimbolo[0][1];
-				} else if (param_tabuleiro[i][j].equals(param_JogadorAndSimbolo[1][1])) {
-					simboloJogador2 = simboloJogador2 + param_JogadorAndSimbolo[1][1];
-				}
-			}
-			if (simboloJogador1.length() == 4) {
-				vencedorLinha = true;
-				System.out.println("O problema sou eu?");
-				break;
-			} else if (simboloJogador2.length() == 4) {
-				vencedorLinha = true;
-				System.out.println("O problema sou eu?");
-				break;
-			}
-			simboloJogador1 = param_JogadorAndSimbolo[0][1];
-			simboloJogador2 = param_JogadorAndSimbolo[1][1];
-		}
-		return vencedorLinha;
-	}
-
-	/* Funcao para verificar se houve vencedor na coluna*/
+	/* Funcao para verificar se houve vencedor na coluna */
 	public static boolean Coluna(String[][] param_tabuleiro, String[][] param_JogadorAndSimbolo) {
 		boolean vencedorColuna = false;
 		String simboloJogador1 = param_JogadorAndSimbolo[0][1];
@@ -361,41 +305,99 @@ public class TicTacToe {
 		return vencedorColuna;
 	}
 
+	/* Funcao para verificar se houve vencedor na linha */
+	public static boolean Linha(String[][] param_tabuleiro, String[][] param_JogadorAndSimbolo) {
+		boolean vencedorLinha = false;
+		String simboloJogador1 = param_JogadorAndSimbolo[0][1];
+		String simboloJogador2 = param_JogadorAndSimbolo[1][1];
+		for (int i = 0; i < param_tabuleiro.length; i++) {
+			for (int j = 0; j < param_tabuleiro[i].length; j++) {
+				if (param_tabuleiro[i][j].equals(param_JogadorAndSimbolo[0][1])) {
+					simboloJogador1 = simboloJogador1 + param_JogadorAndSimbolo[0][1];
+				} else if (param_tabuleiro[i][j].equals(param_JogadorAndSimbolo[1][1])) {
+					simboloJogador2 = simboloJogador2 + param_JogadorAndSimbolo[1][1];
+				}
+			}
+			if (simboloJogador1.length() == 4) {
+				vencedorLinha = true;
+				break;
+			} else if (simboloJogador2.length() == 4) {
+				vencedorLinha = true;
+				break;
+			}
+			simboloJogador1 = param_JogadorAndSimbolo[0][1];
+			simboloJogador2 = param_JogadorAndSimbolo[1][1];
+		}
+		return vencedorLinha;
+	}
+
+	/* Funcao para verificar se houve vencedor na diagonal */
+	public static boolean Diagonal(String[][] param_tabuleiro, String[][] param_JogadorAndSimbolo) {
+		boolean vencedorDiagonal = false;
+		if (!param_tabuleiro[0][0].equals(" ") && !param_tabuleiro[2][2].equals(" ")
+				&& param_tabuleiro[0][0].equals(param_tabuleiro[2][2])) {
+			if (param_tabuleiro[0][0].equals(param_tabuleiro[1][1])) {
+				vencedorDiagonal = true;
+			}
+		}
+		if (!param_tabuleiro[2][0].equals(" ") && !param_tabuleiro[0][2].equals(" ")
+				&& param_tabuleiro[2][0].equals(param_tabuleiro[0][2])) {
+			if (param_tabuleiro[2][0].equals(param_tabuleiro[1][1])) {
+				vencedorDiagonal = true;
+			}
+		}
+		return vencedorDiagonal;
+	}
+
 	/* Funcao para computar o placar do jogo da velha */
-	public static int[] PlacarJogoDaVelha(int param_turno, String[][] jogadoresAndSimbolo, int[] param_placar, boolean param_houveUmVencedor) {
+	public static int[] PlacarJogoDaVelha(int param_turno, String[][] jogadoresAndSimbolo, int[] param_placar,
+			boolean param_houveUmVencedor) {
 		if (param_houveUmVencedor == false) {
 			param_placar[0] += 0;
 			param_placar[1] += 0;
 		}
 		if (param_turno == 0) {
 			param_placar[0] += 1;
-			System.out.println("O jogador " + jogadoresAndSimbolo[0][0] + " venceu essa!");
+			System.out.println("| O jogador " + jogadoresAndSimbolo[0][0]
+					+ " venceu essa!                                                            |");
 		} else if (param_turno == 1) {
-			System.out.println("O jogador" + jogadoresAndSimbolo[1][0] + " venceu essa!");
+			System.out.println("| O jogador " + jogadoresAndSimbolo[1][0]
+					+ " venceu essa!                                                            |");
 			param_placar[1] += 1;
 		}
-		System.out.println("Placar geral: ");
-		System.out.println(jogadoresAndSimbolo[0][0] + " " + param_placar[0] + " pontos");
-		System.out.println(jogadoresAndSimbolo[1][0] + " " + param_placar[1] + " pontos");
+		System.out.println("| Placar geral:                                                                         |");
+		System.out.println("| " + jogadoresAndSimbolo[0][0] + " " + param_placar[0]
+				+ " pontos                                                                          |");
+		System.out.println("| " + jogadoresAndSimbolo[1][0] + " " + param_placar[1]
+				+ " pontos                                                                          |");
 		return param_placar;
 	}
-
-	/* Funcao para limpartela */
-	public static void LimpaTela() { 
-		for (int i = 0; i < 50; i++) {
-			System.out.println();
-		}
-	}
-
 	/* Efetuar de fato a jogada (digitar o simbolo na matriz_ */
-	public static String[][] EfetuarJogada(String param_jogada, String[][] param_tabuleiro, int param_turno,
-			String[][] param_jogadorAndSimbolo) {
-		char[] caractereDaJogada = new char[2];
-		int[] coordenadaDaJogada = new int[2];
-		caractereDaJogada = SepararCaractereJogada(param_jogada);
-		coordenadaDaJogada = CoordenadaDaJogada(caractereDaJogada);
-		param_tabuleiro[coordenadaDaJogada[0]][coordenadaDaJogada[1]] = param_jogadorAndSimbolo[param_turno][1];
-		return param_tabuleiro;
+
+	/* Funcao usada para saber se o usuario quis finalizar */
+	public static boolean Fim(Scanner sc) {
+		String sair;
+		boolean opcao = false;
+		do {
+			System.out.println("Deseja finalizar? S/N");
+			sair = sc.next();
+			sair = sair.toUpperCase();
+			switch (sair) {
+			case "S" -> {
+				opcao = true;
+				sair = "0";
+			}
+			case "N" -> {
+				opcao = false;
+				sair = "0";
+			}
+			default -> {
+				System.out.println("Opção inválida!");
+				sair = "1";
+			}
+			}
+		} while (!sair.equals("0"));
+		return opcao;
 	}
 
 	public static void main(String[] args) {
@@ -413,7 +415,7 @@ public class TicTacToe {
 			jogadoresAndSimbolo[i][0] = jogadoresAndSimbolo[i][0].toUpperCase();
 		}
 
-		int turno = Dados(jogadoresAndSimbolo);
+		int turno = DadosPrimeiraRodada(jogadoresAndSimbolo);
 		do {
 			int n = 0;
 			while (houveUmVencedor == false) {
@@ -423,19 +425,29 @@ public class TicTacToe {
 				if (n >= 4) {
 					houveUmVencedor = HouveUmVencedor(tabuleiroJogoDaVelha, jogadoresAndSimbolo, n);
 					if (houveUmVencedor == true) {
-						AnimacaoPontos();
+						Delay(1000);
 						EscreverMatriz(tabuleiroJogoDaVelha);
+						LinhaParaSepararInformacoes();
 						placar = PlacarJogoDaVelha(turno, jogadoresAndSimbolo, placar, houveUmVencedor);
+						LinhaParaSepararInformacoes();
 					}
 				}
-				if (houveUmVencedor==false && n == 9) {
-					System.out.println("Houve empate");
+				if (houveUmVencedor == false && n == 9) {
+					LinhaParaSepararInformacoes();
+					System.out.println(
+							"| DUELO EQUILIBRADO                                                                     |");
+					System.out.println(
+							"| HOUVE UM EMPATE                                                                       |");
+					LinhaParaSepararInformacoes();
+					placar = PlacarJogoDaVelha(turno, jogadoresAndSimbolo, placar, houveUmVencedor);
+					LinhaParaSepararInformacoes();
+					break;
 				}
 
 				turno = AlternarTurnos(turno);
 			}
 
-			AnimacaoPontos();
+			Delay(1000);
 			finalizarCodigo = Fim(sc);
 			if (finalizarCodigo == false) {
 				houveUmVencedor = false;
@@ -447,9 +459,3 @@ public class TicTacToe {
 
 	}
 }
-/*
- * agora so falta uma função pra revesar o turno de quem começa e achar os
- * erros, pq ao q me parece essa versão esta 99% pronta. AH, falta o Matheus da
- * o toque dele tambem.
- * 
- */
