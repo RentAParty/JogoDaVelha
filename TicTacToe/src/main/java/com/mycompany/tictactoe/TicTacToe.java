@@ -4,310 +4,459 @@ import java.util.Scanner;
 
 public class TicTacToe {
 
-    public static int Dados(String jogador[][]) { // função para decidir quem começará primeiro
-        linha();
-        System.out.println("| Será decidido quem jogará primeiro através de um sistema de dados.                    |");
-        Delay(1000);
-        System.out.println("| O computador lançara um dado com número aleatório de 1 a 6 para cada um dos jogadores.|");
-        Delay(1000);
-        System.out.println("| O jogador cujo dado tiver tido o maior número começará a rodada.                      |");
-        Delay(1000);
-        System.out.println("| Em caso de empate os dados serão lançados novamente                                   |");
-        int[] dados = new int[2]; // variaveis dos dados
-        int turno = 0; // retorna qual jogador ganhou
-        do {
-            dados[0] = (int) ((Math.random() * 6 + 1)); // para pegar um número aleatório de 1 a 6.
-            dados[1] = (int) ((Math.random() * 6 + 1));
-            Delay(1000);
-            System.out.println("|                                     Dados rolados!                                    |");
+	/* Funcao para limpartela */
+	public static void LimpaTela() {
+		for (int i = 0; i < 50; i++) {
+			System.out.println();
+		}
+	}
 
-            Delay(500);
-            if (dados[0] == dados[1]) {
-                System.out.println("| A rodada terminou empatada, ambos os dados deram " + dados[0]);
-            } else if (dados[0] > dados[1]) {
-                System.out.println("| " + jogador[0][0] + " ganhou a rodada. " + dados[0] + " é maior que " + dados[1]);
-                jogador[0][1] = "X";
-                jogador[1][1] = "O";
-            } else {
-                System.out.println("| " + jogador[1][0] + " ganhou a rodada. " + dados[1] + " > " + dados[0]);
-                jogador[0][1] = "O";
-                jogador[1][1] = "X";
-                turno = 1;
-            }
-        } while (dados[0] == dados[1]); // looping para garantir que tenha um vencedor
-        linha();
-        Delay(1500);
-        return turno;
-    }
+	public static void LinhaParaSepararInformacoes() {
+		System.out.println(" ---------------------------------------------------------------------------------------");
+	}
 
-    public static int Turno(int turnos) {
-        int turno = 0;
-        if (turnos == 0) {
-            turno = 1;
-        }
-        return turno;
-    }
+	/* Funcao de atraso para usar na animacao */
+	public static void Delay(int milisegundos) {
+		try {
+			Thread.sleep(milisegundos);
+		} catch (InterruptedException ex) {
+			Thread.currentThread().interrupt();
+		}
+	}
 
-    public static boolean Fim(Scanner sc) {
-        String sair;
-        boolean opcao = false;
-        do {
-            System.out.println("DESEJA FINALIZAR? S/N");
-            sair = sc.next();
-            sair = sair.toUpperCase(); // para não precisar de 2 switch cases a mais
-            switch (sair) {
-                case "S" -> {
-                    opcao = true;
-                    sair = "0";
-                }
-                case "N" -> {
-                    opcao = false;
-                    sair = "0";
-                }
-                default -> {
-                    System.out.println("OPÇÃO INVÁLIDA!");
-                    sair = "1";
-                }
-            }
-        } while (!sair.equals("0"));
-        return opcao;
-    }
+	/* Funcao usada para resetar a matriz para um novo jogo */
+	public static void LimparTabuleiro(String param_tabuleiro[][]) {
+		for (int l = 0; l < 3; l++) {
+			for (int m = 0; m < 3; m++) {
+				param_tabuleiro[l][m] = " ";
+			}
+		}
+	}
 
-    public static void Delay(int milisegundos) {
-        try {
-            Thread.sleep(milisegundos);
-        } catch (InterruptedException ex) {
-            Thread.currentThread().interrupt();
-        }
-    }
+	/* Funcao usada para escrever a matriz */
+	public static void EscreverMatriz(String param_tabuleiro[][]) {
+		System.out.println();
+		System.out.println();
+		System.out.println("    A    B    C");
+		for (int i = 0; i < param_tabuleiro.length; i++) {
+			for (int j = 0; j < param_tabuleiro.length; j++) {
+				if (j == 0) {
+					System.out.print((i + 1) + "   " + param_tabuleiro[i][j] + "  | ");
+				} else if (j == 1) {
+					System.out.print(param_tabuleiro[i][j] + "  | ");
+				} else {
+					System.out.println(param_tabuleiro[i][j]);
+				}
+			}
+			if (i != 2) {
+				System.out.println("   ----+----+----");
+			}
+		}
+		System.out.println();
+	}
 
-    public static void LimparMatriz(String tictactoe[][]) { // chamado quando há a necessidade de resetar o game.
-        for (int l = 0; l < 3; l++) {
-            for (int m = 0; m < 3; m++) {
-                tictactoe[l][m] = " ";
-            }
-        }
-    }
+	/* Funcao feita para decidir quem começara a rodada */
+	public static int DadosPrimeiraRodada(String param_jogadorAndSimbolo[][]) {
+		LinhaParaSepararInformacoes();
+		System.out.println("| Será decidido quem jogará primeiro através de um sistema de dados.                    |");
+		Delay(1000);
+		System.out.println("| O computador lançara um dado com número aleatório de 1 a 6 para cada um dos jogadores.|");
+		Delay(1000);
+		System.out.println("| O jogador cujo dado tiver tido o maior número começará a rodada.                      |");
+		Delay(1000);
+		System.out.println("| Em caso de empate os dados serão lançados novamente                                   |");
+		int[] dadosJogadores = new int[2];
+		int turnoJogador = 0;
+		do {
+			dadosJogadores[0] = (int) ((Math.random() * 6 + 1));
+			dadosJogadores[1] = (int) ((Math.random() * 6 + 1));
+			Delay(1000);
+			System.out.println(
+					"|                                     Dados rolados!                                    |");
+			Delay(500);
+			if (dadosJogadores[0] == dadosJogadores[1]) {
+				System.out.println("| A rodada terminou empatada, ambos os dados deram " + dadosJogadores[0]
+						+ "                                    |");
+			} else if (dadosJogadores[0] > dadosJogadores[1]) {
+				System.out.println("| O " + param_jogadorAndSimbolo[0][0] + " ganhou a rodada. " + dadosJogadores[0]
+						+ " > " + dadosJogadores[1] + "                                                          |");
+				param_jogadorAndSimbolo[0][1] = "X";
+				param_jogadorAndSimbolo[1][1] = "O";
+			} else {
+				System.out.println("| O " + param_jogadorAndSimbolo[1][0] + " ganhou a rodada. " + dadosJogadores[1]
+						+ " > " + dadosJogadores[0] + "                                                          |");
+				param_jogadorAndSimbolo[0][1] = "O";
+				param_jogadorAndSimbolo[1][1] = "X";
+				turnoJogador = 1;
+			}
+		} while (dadosJogadores[0] == dadosJogadores[1]);
+		LinhaParaSepararInformacoes();
+		Delay(1500);
+		return turnoJogador;
+	}
 
-    public static void EscreverMatriz(String tabuleiro[][]) {
-        Delay(1000);
-        LimpaTela();
-        System.out.println("    A    B    C"); // os espaços são necessários para que fique bonito
-        for (int i = 0; i < tabuleiro.length; i++) { // aqui uso o for pra navegar pela matriz e escrevcer ela
-            for (int j = 0; j < tabuleiro.length; j++) {
-                switch (j) {
-                    case 0 ->
-                        System.out.print((i + 1) + "   " + tabuleiro[i][j] + "  | ");
-                    // linha,
-                    // o segundo for serve pra escrever a
-                    case 1 -> // a barra para separar um do outro
-                        System.out.print(tabuleiro[i][j] + "  | ");
-                    default ->
-                        System.out.println(tabuleiro[i][j]);
-                }
-            }
-            if (i != 2) {
-                System.out.println("   ----+----+----"); // ja esse aqui é para quando for pular de linha
-            }
-        }
-        System.out.println();
-    }
+	/* Funcao para ir alternando os turnos */
+	public static int AlternarTurnos(int param_turnoAtual) {
+		int proxTurno = 0;
+		if (param_turnoAtual == 0) {
+			proxTurno = 1;
+		}
+		return proxTurno;
+	}
 
-    public static void Jogadas(String[][] tabuleiro, String jogador[][], int turno) {
-        Scanner sc = new Scanner(System.in);
-        String jogada;
-        int valorAux = 0, valorAux2 = 0;
-        boolean verif = false, verif2 = false, condicao; // verificacao condicao do caractere alfabetico
-        char[] aux = new char[2]; // guarda os dois caracteres da string de forma separada
-        do {
-            EscreverMatriz(tabuleiro); // para escrever a matriz
-            System.out.println("INSIRA A SUA JOGADA (VEZ DO JOGADOR(A) " + jogador[turno][0] + ")");
-            jogada = sc.nextLine(); // ler a jogada
-            if (jogada.length() != 2) { // se for diferente de dois caracteres ja interrompe e volta pro comeco
-                System.out.println("POR FAVOR, DIGITE UMA COORDENADA VÁLIDA!");
-            } else { // se for igual a dois caracteres vem nesse else
-                for (int i = 0; i < jogada.length(); i++) { // para navegar nos dois caracteres da string
-                    aux[i] = jogada.charAt(i); // separa a string em um caractere cada
-                }
-                if (Character.isLetter(aux[0])) { // se o primeiro caractere for uma letra cai aqui, se for
-                    // digito cai no else
-                    valorAux = Character.getNumericValue(aux[0]); // pego o codigo dela (A=10, B=11, C=12) indifere
-                    // maiusc ou minusc
-                    if (valorAux < 13 && valorAux > 9) { // se for 10, 11 ou 12 verdadeiro, senao fica falso e tem de
-                        // fazer de novo
-                        verif = true;
-                    }
-                    if (Character.isDigit(aux[1])) { // aqui checa o segundo caractere, se for digito vai pra
-                        // frente caso contrario fica falso direto
-                        valorAux2 = Character.getNumericValue(aux[1]); // pega o valor do numero q no caso e ele mesmo
-                        if (valorAux2 > 0 && valorAux2 < 4) { // se for 1,2 ou 3 e verdadeiro, caso contrario falso
-                            verif2 = true;
-                        }
-                    }
-                } else if (Character.isDigit(aux[0])) { // a partir daqui e o mesmo processo que antes
-                    valorAux2 = Character.getNumericValue(aux[0]); // porem com numero primeiro e letra depois
-                    if (valorAux2 > 0 && valorAux2 < 4) { // para caso o usaurio digitar 1a ao inves de a1 nao der
-                        // invalido
-                        verif2 = true;
-                    }
-                    if (Character.isLetter(aux[1])) {
-                        valorAux = Character.getNumericValue(aux[1]);
-                        if (valorAux < 13 && valorAux > 9) {
-                            verif = true;
-                        }
-                    }
-                }
-                if (verif && verif2) { // se as condicoes atenderem entra nesse if, se nao o usuario tem
-                    // que por outro input
-                    valorAux = valorAux - 10; // para poder entrar na coluna certa
-                    condicao = EspacoVazio(tabuleiro, valorAux2, valorAux); // para checar se o espaco esta disponivel
-                    if (condicao) { // se sim, entra aqui, se nao escreve que o espaco esta ocupado
-                        tabuleiro[valorAux2 - 1][valorAux] = jogador[turno][1]; // aqui pega o simbolo do jogador e
-                        // escreve no tabuleiro
-                    } else {
-                        System.out.println("ESPAÇO JÁ OCUPADO.");
-                        verif = false;
-                        verif2 = false;
-                    }
-                } else { // se for dois num ou duas letras ou for uma letra ou num invalido, acontece
-                    // esse sysout
-                    System.out.println("POR FAVOR, INSIRA UMA COORDENADA NO MODELO LETRA, NÚMERO! (EXEMPLO: A1).");
-                }
-            }
-        } while (verif == false || verif2 == false);
-    }
+	/*
+	 * Funcao usada para ler a jogada (so aceita quando uma jogada valida for
+	 * inserida atarves da funcao ValidacaoJogada)
+	 */
+	public static String LerJogadas(String[][] param_tabuleiro, String jogador[][], int param_turno) {
+		Scanner sc = new Scanner(System.in);
+		String jogada;
+		boolean jogada_e_Valida = true;
+		do {
+			EscreverMatriz(param_tabuleiro);
+			System.out.println("Onde deseja jogar? (Vez do jogador " + jogador[param_turno][0] + ")");
+			jogada = sc.nextLine();
+			if (jogada.length() != 2) {
+				System.out.println("Por favor digite uma opção válida");
+			} else {
+				jogada_e_Valida = ValidacaoJogada(jogada, param_tabuleiro);
+			}
+		} while (!jogada_e_Valida);
+		return jogada;
+	}
 
-    public static boolean EspacoVazio(String[][] tabuleiro, int coluna, int linha) { //  para checar se ha espaco vazio
-        coluna--; // tem que tirar um da coluna para funcionar (1-3)-1 = (0-2) intervalo das
-        // matrizes
-        boolean espaco = false; // se espaco for falso, ent espaco ta ocupado
-        if (tabuleiro[coluna][linha].equals(" ")) { // se espaco estiver em branco, espaco = true
-            espaco = true;
-        }
+	/*
+	 * Funcao usada para validar a jogada (chama outras funcoes para cada tipo de
+	 * validacao
+	 */
+	public static boolean ValidacaoJogada(String param_jogada, String[][] param_tabuleiro) {
+		boolean jogadaValida = true;
+		boolean letraDigitoValido = true;
+		boolean caractereValido = true;
+		boolean espacoEstaVazio = true;
+		int[] coordenadaDaJogada = new int[2];
+		char[] caractereDaJogada = new char[2];
+		letraDigitoValido = ValidacaoLetraDigitoJogada(param_jogada);
+		if (letraDigitoValido == false) {
+			System.out.println("Você inseriu uma coordenada com caracteres duplicados.");
+			return false;
+		} else {
+			char[] caractereJogada = SepararCaractereJogada(param_jogada);
+			caractereValido = ValidacaoCaractereJogada(caractereJogada);
+			if (caractereValido == false) {
+				System.out.println(
+						"Você inseriu um caractere inválido. Letra diferente de A,B ou C ou número diferente de 1,2 ou 3 ");
+				return false;
+			} else {
+				caractereDaJogada = SepararCaractereJogada(param_jogada);
+				coordenadaDaJogada = CoordenadaDaJogada(caractereDaJogada);
+				espacoEstaVazio = EspacoEstaVazio(param_tabuleiro, coordenadaDaJogada);
+				if (espacoEstaVazio == false) {
+					System.out.println("Espaço escolhido já está ocupado");
+					return false;
+				}
+			}
+		}
+		return jogadaValida;
+	}
 
-        return espaco;
-    }
+	/* Funcao usada para separar a string em dois caracteres */
+	public static char[] SepararCaractereJogada(String param_jogada) {
+		char[] caractereJogada = new char[2];
+		for (int i = 0; i < 2; i++) {
+			caractereJogada[i] = param_jogada.charAt(i);
+		}
+		return caractereJogada;
+	}
 
-    public static int[] Ganhador(String[][] tabuleiro, String[][] jogador, int n) { // sistema para verificar se
-        // houve um
-        // ganhador
-        int[] vencedor = new int[2]; // para armazenar se houve um ganhador (vencedor[0]) e quem ganhou
-        // (venceddor[1])
-        vencedor[0] = 0;
-        String aux1 = jogador[0][1]; // essas duas variaveis recebem o simbolo do jogador
-        String aux2 = jogador[1][1];
-        for (int i = 0; i < tabuleiro.length; i++) { // esse for confere se houve ganhador na linha
-            for (int j = 0; j < tabuleiro[i].length; j++) {
-                if (tabuleiro[i][j].equals(jogador[0][1])) { // aqui vai adicionando o simbolo do jogador ate o fim da
-                    // linha
-                    aux1 = aux1 + jogador[0][1];
-                } else if (tabuleiro[i][j].equals(jogador[1][1])) {
-                    aux2 = aux2 + jogador[1][1];
-                }
-            }
-            if (aux1.length() == 4) { // se houve algum simbolo repetidos 4 vezes, houve um ganhador
-                vencedor[0] = 1; // vencedor[0] recebe "true" e vencedor[1] "0" ou "1" dependendo do jogador
-                vencedor[1] = 0; // foi o jeito mais otimizado que achei
-                break;
-            } else if (aux2.length() == 4) {
-                vencedor[0] = 1;
-                vencedor[1] = 1;
-                break;
-            }
-            aux1 = jogador[0][1];
-            aux2 = jogador[1][1];
-        }
-        for (int i = 0; i < tabuleiro.length; i++) { // mesma coisa do outro for, mas parta colunas
-            for (int j = 0; j < tabuleiro[i].length; j++) {
-                if (tabuleiro[j][i].equals(jogador[0][1])) {
-                    aux1 = aux1 + jogador[0][1];
-                } else if (tabuleiro[j][i].equals(jogador[1][1])) {
-                    aux2 = aux2 + jogador[1][1];
-                }
-            }
-            if (aux1.length() == 4) {
-                vencedor[0] = 1;
-                vencedor[1] = 0;
-                break;
-            } else if (aux2.length() == 4) {
-                vencedor[0] = 1;
-                vencedor[1] = 1;
-                break;
-            }
-            aux1 = jogador[0][1];
-            aux2 = jogador[1][1];
-        }
-        if (!tabuleiro[0][0].equals(" ") && !tabuleiro[2][2].equals(" ") && tabuleiro[0][0].equals(tabuleiro[2][2])) {
-            if (tabuleiro[0][0].equals(tabuleiro[1][1])) {
-                vencedor[0] = 1;
-                if (tabuleiro[0][0].equals(aux2)) {
-                    vencedor[1] = 1;
-                } else {
-                    vencedor[1] = 0;
-                }
-            }
-        }
-        if (!tabuleiro[2][0].equals(" ") && !tabuleiro[0][2].equals(" ") && tabuleiro[2][0].equals(tabuleiro[0][2])) {
-            if (tabuleiro[2][0].equals(tabuleiro[1][1])) {
-                vencedor[0] = 1;
-                if (tabuleiro[2][0].equals(aux2)) {
-                    vencedor[1] = 1;
-                } else {
-                    vencedor[1] = 0;
-                }
-            }
-        }
-        if (vencedor[0] == 0 && n == 9) {
-            vencedor[1] = -1;
-        }
+	/* Funcao usada para verificar se há uma letra e um número */
 
-        return vencedor;
-    }
+	public static boolean ValidacaoLetraDigitoJogada(String param_jogada) {
+		char[] caractereJogada = new char[2];
+		boolean verificacaoPrimeiroCaractereLetra = true;
+		boolean verificacaoSegundoCaractereDigito = true;
+		caractereJogada = SepararCaractereJogada(param_jogada);
+		if (Character.isDigit(caractereJogada[0])) {
+			verificacaoPrimeiroCaractereLetra = false;
+		}
+		if (Character.isLetter(caractereJogada[1])) {
+			verificacaoSegundoCaractereDigito = false;
+		}
 
-    public static int[] Contador(int[] jogador, int[] contador, String[][] jogadores) { // para ccontar a quantidade
-        // de pontos de cada jogador
-        linha();
-        switch (jogador[1]) {
-            case 0 -> {
-                // se tiver 0 quem ganhou foi o jogador que colocou o nome primeiro
-                contador[0]++;
-                System.out.println("| GANHADOR(A): " + jogadores[0][0]);
-            }
-            case 1 -> {
-                // se tiver 1 quem ganhou foi o jogador que colocou o nome depois
-                contador[1]++;
-                System.out.println("| GANHADOR(A): " + jogadores[1][0]);
-            }
-            case -1 ->
-                System.out.println("| EMPATE!");
-        }
-        System.out.println("| PLACAR GERAL: ");
+		if (verificacaoPrimeiroCaractereLetra != verificacaoSegundoCaractereDigito) {
+			return false;
+		} else {
+			return true;
+		}
+	}
 
-        if (contador[0] == 0 || contador[0] == 1) {
-            System.out.println("| " + jogadores[0][0] + " " + contador[0] + " PONTO");
-        } else {
-            System.out.println("| " + jogadores[0][0] + " " + contador[0] + " PONTOS");
-        }
+	/* Funcao usada para verificar se o caractere inserido é válido */
+	public static boolean ValidacaoCaractereJogada(char[] param_caractereJogada) {
+		boolean caractereValido = true;
+		int digitoDaJogada;
+		char letraA = 'a';
+		char letraB = 'b';
+		char letraC = 'c';
+		if (Character.isLetter(param_caractereJogada[0])) {
+			Character.toLowerCase(param_caractereJogada[0]);
+			digitoDaJogada = Character.getNumericValue(param_caractereJogada[1]);
+			if (digitoDaJogada < 1 && digitoDaJogada > 3) {
+				return false;
+			} else {
+				if (param_caractereJogada[0] != letraA && param_caractereJogada[0] != letraB
+						&& param_caractereJogada[0] != letraC) {
+					caractereValido = false;
+				}
+			}
+		} else {
+			Character.toLowerCase(param_caractereJogada[1]);
+			digitoDaJogada = Character.getNumericValue(param_caractereJogada[0]);
+			if (digitoDaJogada < 1 && digitoDaJogada > 3) {
+				return false;
+			} else {
+				if (param_caractereJogada[1] != letraA && param_caractereJogada[1] != letraB
+						&& param_caractereJogada[1] != letraC)
+					caractereValido = false;
+			}
+		}
+		return caractereValido;
+	}
 
-        if (contador[1] == 0 || contador[1] == 1) {
-            System.out.println("| " + jogadores[1][0] + " " + contador[1] + " PONTO");
-        } else {
-            System.out.println("| " + jogadores[1][0] + " " + contador[1] + " PONTOS");
-        }
+	/* Funcao usada para transformar os caracteres na coordenada certa */
+	public static int[] CoordenadaDaJogada(char[] param_caractereJogada) {
+		int[] coordenadaDaJogada = new int[2];
+		if (Character.getNumericValue(param_caractereJogada[0]) > 9) {
+			coordenadaDaJogada[1] = Character.getNumericValue(param_caractereJogada[0]);
+			coordenadaDaJogada[0] = Character.getNumericValue(param_caractereJogada[1]);
+		} else {
+			coordenadaDaJogada[1] = Character.getNumericValue(param_caractereJogada[1]);
+			coordenadaDaJogada[0] = Character.getNumericValue(param_caractereJogada[0]);
+		}
+		coordenadaDaJogada[1] -= 10;
+		coordenadaDaJogada[0] -= 1;
+		return coordenadaDaJogada;
+	}
 
-        linha();
-        return contador;
-    }
+	/* Funcao para verificar se o espaco esta vazio */
+	public static boolean EspacoEstaVazio(String[][] param_tabuleiro, int[] param_coordenadaDaJogada) {
+		boolean espaco = false;
+		if (param_tabuleiro[param_coordenadaDaJogada[0]][param_coordenadaDaJogada[1]].equals(" ")) {
+			espaco = true;
+		}
+		return espaco;
+	}
 
-    public static void LimpaTela() { // pula 50 linhas e "limpatela"
-        for (int i = 0; i < 50; i++) {
-            System.out.println();
-        }
-    }
+	/* Funcao para fazer a jogada */
+	public static String[][] EfetuarJogada(String param_jogada, String[][] param_tabuleiro, int param_turno,
+			String[][] param_jogadorAndSimbolo) {
+		char[] caractereDaJogada = new char[2];
+		int[] coordenadaDaJogada = new int[2];
+		caractereDaJogada = SepararCaractereJogada(param_jogada);
+		coordenadaDaJogada = CoordenadaDaJogada(caractereDaJogada);
+		param_tabuleiro[coordenadaDaJogada[0]][coordenadaDaJogada[1]] = param_jogadorAndSimbolo[param_turno][1];
+		return param_tabuleiro;
+	}
 
-    public static void linha() {
-        System.out.println(" ---------------------------------------------------------------------------------------");
-    }
+	/* Funcao para verificar se houve um vencedor */
+	public static boolean HouveUmVencedor(String[][] param_tabuleiro, String[][] param_JogadorAndSimbolo, int n) {
+		boolean houveUmVencedor = false;
+		boolean coluna;
+		boolean linha;
+		boolean diagonal;
+		coluna = Coluna(param_tabuleiro, param_JogadorAndSimbolo);
+		if (coluna == true) {
+			return true;
+		}
+		linha = Linha(param_tabuleiro, param_JogadorAndSimbolo);
+		if (linha == true) {
+			return true;
+		}
+		diagonal = Diagonal(param_tabuleiro, param_JogadorAndSimbolo);
+		if (diagonal == true) {
+			return true;
+		}
+
+		return houveUmVencedor;
+	}
+
+	/* Funcao para verificar se houve vencedor na coluna */
+	public static boolean Coluna(String[][] param_tabuleiro, String[][] param_JogadorAndSimbolo) {
+		boolean vencedorColuna = false;
+		String simboloJogador1 = param_JogadorAndSimbolo[0][1];
+		String simboloJogador2 = param_JogadorAndSimbolo[1][1];
+		for (int i = 0; i < param_tabuleiro.length; i++) {
+			for (int j = 0; j < param_tabuleiro[i].length; j++) {
+				if (param_tabuleiro[j][i].equals(param_JogadorAndSimbolo[0][1])) {
+					simboloJogador1 = simboloJogador1 + param_JogadorAndSimbolo[0][1];
+				} else if (param_tabuleiro[j][i].equals(param_JogadorAndSimbolo[1][1])) {
+					simboloJogador2 = simboloJogador2 + param_JogadorAndSimbolo[1][1];
+				}
+			}
+			if (simboloJogador1.length() == 4) {
+				vencedorColuna = true;
+				break;
+			} else if (simboloJogador2.length() == 4) {
+				vencedorColuna = true;
+				break;
+			}
+			simboloJogador1 = param_JogadorAndSimbolo[0][1];
+			simboloJogador2 = param_JogadorAndSimbolo[1][1];
+		}
+		return vencedorColuna;
+	}
+
+	/* Funcao para verificar se houve vencedor na linha */
+	public static boolean Linha(String[][] param_tabuleiro, String[][] param_JogadorAndSimbolo) {
+		boolean vencedorLinha = false;
+		String simboloJogador1 = param_JogadorAndSimbolo[0][1];
+		String simboloJogador2 = param_JogadorAndSimbolo[1][1];
+		for (int i = 0; i < param_tabuleiro.length; i++) {
+			for (int j = 0; j < param_tabuleiro[i].length; j++) {
+				if (param_tabuleiro[i][j].equals(param_JogadorAndSimbolo[0][1])) {
+					simboloJogador1 = simboloJogador1 + param_JogadorAndSimbolo[0][1];
+				} else if (param_tabuleiro[i][j].equals(param_JogadorAndSimbolo[1][1])) {
+					simboloJogador2 = simboloJogador2 + param_JogadorAndSimbolo[1][1];
+				}
+			}
+			if (simboloJogador1.length() == 4) {
+				vencedorLinha = true;
+				break;
+			} else if (simboloJogador2.length() == 4) {
+				vencedorLinha = true;
+				break;
+			}
+			simboloJogador1 = param_JogadorAndSimbolo[0][1];
+			simboloJogador2 = param_JogadorAndSimbolo[1][1];
+		}
+		return vencedorLinha;
+	}
+
+	/* Funcao para verificar se houve vencedor na diagonal */
+	public static boolean Diagonal(String[][] param_tabuleiro, String[][] param_JogadorAndSimbolo) {
+		boolean vencedorDiagonal = false;
+		if (!param_tabuleiro[0][0].equals(" ") && !param_tabuleiro[2][2].equals(" ")
+				&& param_tabuleiro[0][0].equals(param_tabuleiro[2][2])) {
+			if (param_tabuleiro[0][0].equals(param_tabuleiro[1][1])) {
+				vencedorDiagonal = true;
+			}
+		}
+		if (!param_tabuleiro[2][0].equals(" ") && !param_tabuleiro[0][2].equals(" ")
+				&& param_tabuleiro[2][0].equals(param_tabuleiro[0][2])) {
+			if (param_tabuleiro[2][0].equals(param_tabuleiro[1][1])) {
+				vencedorDiagonal = true;
+			}
+		}
+		return vencedorDiagonal;
+	}
+
+	/* Funcao para computar o placar do jogo da velha */
+	public static int[] PlacarJogoDaVelha(int param_turno, String[][] jogadoresAndSimbolo, int[] param_placar,
+			boolean param_houveUmVencedor) {
+		if (param_houveUmVencedor == false) {
+			param_placar[0] += 0;
+			param_placar[1] += 0;
+		}
+		if (param_turno == 0) {
+			param_placar[0] += 1;
+			System.out.println("| O jogador " + jogadoresAndSimbolo[0][0]
+					+ " venceu essa!                                                            |");
+		} else if (param_turno == 1) {
+			System.out.println("| O jogador " + jogadoresAndSimbolo[1][0]
+					+ " venceu essa!                                                            |");
+			param_placar[1] += 1;
+		}
+		System.out.println("| Placar geral:                                                                         |");
+		System.out.println("| " + jogadoresAndSimbolo[0][0] + " " + param_placar[0]
+				+ " pontos                                                                          |");
+		System.out.println("| " + jogadoresAndSimbolo[1][0] + " " + param_placar[1]
+				+ " pontos                                                                          |");
+		return param_placar;
+	}
+	/* Efetuar de fato a jogada (digitar o simbolo na matriz_ */
+
+	/* Funcao usada para saber se o usuario quis finalizar */
+	public static boolean Fim(Scanner sc) {
+		String sair;
+		boolean opcao = false;
+		do {
+			System.out.println("Deseja finalizar? S/N");
+			sair = sc.next();
+			sair = sair.toUpperCase();
+			switch (sair) {
+			case "S" -> {
+				opcao = true;
+				sair = "0";
+			}
+			case "N" -> {
+				opcao = false;
+				sair = "0";
+			}
+			default -> {
+				System.out.println("Opção inválida!");
+				sair = "1";
+			}
+			}
+		} while (!sair.equals("0"));
+		return opcao;
+	}
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		String[][] tabuleiroJogoDaVelha = new String[3][3];
+		LimparTabuleiro(tabuleiroJogoDaVelha);
+		System.out.println();
+		boolean finalizarCodigo = false;
+		boolean houveUmVencedor = false;
+		String[][] jogadoresAndSimbolo = new String[2][2];
+		int[] placar = new int[2];
+		for (int i = 0; i < 2; i++) {
+			System.out.println("Informe o nome do " + (i + 1) + "º jogador(a):");
+			jogadoresAndSimbolo[i][0] = sc.nextLine();
+			jogadoresAndSimbolo[i][0] = jogadoresAndSimbolo[i][0].toUpperCase();
+		}
+
+		int turno = DadosPrimeiraRodada(jogadoresAndSimbolo);
+		do {
+			int n = 0;
+			while (houveUmVencedor == false) {
+				n++;
+				String jogada = LerJogadas(tabuleiroJogoDaVelha, jogadoresAndSimbolo, turno);
+				tabuleiroJogoDaVelha = EfetuarJogada(jogada, tabuleiroJogoDaVelha, turno, jogadoresAndSimbolo);
+				if (n >= 4) {
+					houveUmVencedor = HouveUmVencedor(tabuleiroJogoDaVelha, jogadoresAndSimbolo, n);
+					if (houveUmVencedor == true) {
+						Delay(1000);
+						EscreverMatriz(tabuleiroJogoDaVelha);
+						LinhaParaSepararInformacoes();
+						placar = PlacarJogoDaVelha(turno, jogadoresAndSimbolo, placar, houveUmVencedor);
+						LinhaParaSepararInformacoes();
+					}
+				}
+				if (houveUmVencedor == false && n == 9) {
+					LinhaParaSepararInformacoes();
+					System.out.println(
+							"| DUELO EQUILIBRADO                                                                     |");
+					System.out.println(
+							"| HOUVE UM EMPATE                                                                       |");
+					LinhaParaSepararInformacoes();
+					placar = PlacarJogoDaVelha(turno, jogadoresAndSimbolo, placar, houveUmVencedor);
+					LinhaParaSepararInformacoes();
+					break;
+				}
+
+				turno = AlternarTurnos(turno);
+			}
+
+			Delay(1000);
+			finalizarCodigo = Fim(sc);
+			if (finalizarCodigo == false) {
+				houveUmVencedor = false;
+				LimparTabuleiro(tabuleiroJogoDaVelha);
+			}
+			LimpaTela();
+		} while (finalizarCodigo == false);
+		sc.close();
+
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in); // criacao do scanner, usado para o usuário informar um valor
