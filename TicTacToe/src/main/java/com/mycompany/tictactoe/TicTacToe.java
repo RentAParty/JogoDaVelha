@@ -116,6 +116,7 @@ public class TicTacToe {
             EscreverMatriz(param_tabuleiro);
             System.out.println("Onde deseja jogar? (Vez do jogador " + jogador[param_turno][0] + ")");
             jogada = sc.nextLine();
+            jogadas = jogadas.toLowerCase();
             if (jogada.length() != 2) {
                 System.out.println("Por favor digite uma opção válida");
             } else {
@@ -199,7 +200,7 @@ public class TicTacToe {
         if (Character.isLetter(param_caractereJogada[0])) {
             Character.toLowerCase(param_caractereJogada[0]);
             digitoDaJogada = Character.getNumericValue(param_caractereJogada[1]);
-            if (digitoDaJogada < 1 && digitoDaJogada > 3) {
+            if (digitoDaJogada < 1 || digitoDaJogada > 3) {
                 return false;
             } else {
                 if (param_caractereJogada[0] != letraA && param_caractereJogada[0] != letraB
@@ -210,7 +211,7 @@ public class TicTacToe {
         } else {
             Character.toLowerCase(param_caractereJogada[1]);
             digitoDaJogada = Character.getNumericValue(param_caractereJogada[0]);
-            if (digitoDaJogada < 1 && digitoDaJogada > 3) {
+            if (digitoDaJogada < 1 || digitoDaJogada > 3) {
                 return false;
             } else {
                 if (param_caractereJogada[1] != letraA && param_caractereJogada[1] != letraB
