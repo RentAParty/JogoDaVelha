@@ -116,7 +116,7 @@ public class TicTacToe {
             EscreverMatriz(param_tabuleiro);
             System.out.println("Onde deseja jogar? (Vez do jogador " + jogador[param_turno][0] + ")");
             jogada = sc.nextLine();
-            jogada = jogada.toLowerCase();
+            jogadas = jogadas.toLowerCase();
             if (jogada.length() != 2) {
                 System.out.println("Por favor digite uma opção válida");
             } else {
@@ -356,8 +356,8 @@ public class TicTacToe {
         if (param_houveUmVencedor == false) {
             param_placar[0] += 0;
             param_placar[1] += 0;
-        }
-        if (param_turno == 0) {
+        } else {
+         if (param_turno == 0) {
             param_placar[0] += 1;
             System.out.println("| O jogador " + jogadoresAndSimbolo[0][0]
                     + " venceu essa!                                                            |");
@@ -366,6 +366,7 @@ public class TicTacToe {
                     + " venceu essa!                                                            |");
             param_placar[1] += 1;
         }
+	}
         System.out.println("| Placar geral:                                                                         |");
         System.out.println("| " + jogadoresAndSimbolo[0][0] + " " + param_placar[0]
                 + " pontos                                                                          |");
@@ -460,3 +461,4 @@ public class TicTacToe {
         sc.close();
     }
 }
+
