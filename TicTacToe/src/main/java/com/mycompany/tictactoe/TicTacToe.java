@@ -116,7 +116,7 @@ public class TicTacToe {
             EscreverMatriz(param_tabuleiro);
             System.out.println("Onde deseja jogar? (Vez do jogador " + jogador[param_turno][0] + ")");
             jogada = sc.nextLine();
-            jogadas = jogadas.toLowerCase();
+            jogada = jogada.toLowerCase();
             if (jogada.length() != 2) {
                 System.out.println("Por favor digite uma opção válida");
             } else {
